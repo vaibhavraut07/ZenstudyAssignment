@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ContactForm from './ContactForm';
+import config from '../config';
 
 const Dashboard = () => {
   const [contacts, setContacts] = useState([]);
@@ -8,10 +9,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchContacts = async () => {
-      const { data } = await axios.get('/api/contacts', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-      setContacts(data);
+      try {
+        const { data } = await axios.get(`${config.API_BASE_URL}/contacts`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        });
+        setContacts(data);
+      } catch (error) {
+        console.error('Error fetching contacts', error);
+      }
     };
 
     fetchContacts();
@@ -20,10 +25,10 @@ const Dashboard = () => {
   // Handler for deleting a contact
   const deleteContactHandler = async (contactId) => {
     try {
-      await axios.delete(`/api/contacts/${contactId}`, {
+      await axios.delete(`${config.API_BASE_URL}/contacts/${contactId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      setContacts(contacts.filter(contact => contact._id !== contactId)); // Remove the deleted contact from the list
+      setContacts(contacts.filter((contact) => contact._id !== contactId)); // Remove the deleted contact from the list
     } catch (error) {
       console.error('Error deleting contact', error);
     }
@@ -43,10 +48,16 @@ const Dashboard = () => {
           contacts.map((contact) => (
             <li key={contact._id} className="list-group-item">
               {contact.name} - {contact.mobile} - {contact.email}
-              <button className="btn btn-warning btn-sm ml-2" onClick={() => editContactHandler(contact)}>
+              <button
+                className="btn btn-warning btn-sm ml-2"
+                onClick={() => editContactHandler(contact)}
+              >
                 Edit
               </button>
-              <button className="btn btn-danger btn-sm ml-2" onClick={() => deleteContactHandler(contact._id)}>
+              <button
+                className="btn btn-danger btn-sm ml-2"
+                onClick={() => deleteContactHandler(contact._id)}
+              >
                 Delete
               </button>
             </li>
@@ -60,4 +71,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
 
