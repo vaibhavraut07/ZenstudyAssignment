@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import config from '../config';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -10,7 +11,7 @@ const Register = () => {
   const registerHandler = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post('/api/users/register', { username, password });
+      const { data } = await axios.post(`${config.API_BASE_URL}/users/register`, { username, password });
       if (data) {
         navigate('/login'); // Navigate to the login page after successful registration
       }
