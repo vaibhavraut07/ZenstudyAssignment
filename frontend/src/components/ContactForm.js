@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import config from '../config';
 
 const ContactForm = ({ contact, setEditContact }) => {
   const [name, setName] = useState('');
@@ -26,7 +25,7 @@ const ContactForm = ({ contact, setEditContact }) => {
       if (contact) {
         // Update existing contact
         await axios.put(
-          `${config.API_BASE_URL}/contacts/${contact._id}`,
+          `/api/contacts/${contact._id}`,
           { name, mobile, email },
           { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
         );
@@ -34,7 +33,7 @@ const ContactForm = ({ contact, setEditContact }) => {
       } else {
         // Add new contact
         await axios.post(
-          `${config.API_BASE_URL}/contacts`,
+          '/api/contacts',
           { name, mobile, email },
           { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
         );

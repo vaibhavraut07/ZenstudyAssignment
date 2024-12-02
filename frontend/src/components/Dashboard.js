@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ContactForm from './ContactForm';
-import config from '../config';
 
 const Dashboard = () => {
   const [contacts, setContacts] = useState([]);
@@ -10,12 +9,18 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchContacts = async () => {
       try {
-        const { data } = await axios.get(`${config.API_BASE_URL}/contacts`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found in local storage.');
+          return;
+        }
+
+        const { data } = await axios.get('/api/contacts', {
+          headers: { Authorization: `Bearer ${token}` },
         });
         setContacts(data);
       } catch (error) {
-        console.error('Error fetching contacts', error);
+        console.error('Error fetching contacts:', error.response?.data || error.message);
       }
     };
 
@@ -25,12 +30,17 @@ const Dashboard = () => {
   // Handler for deleting a contact
   const deleteContactHandler = async (contactId) => {
     try {
-      await axios.delete(`${config.API_BASE_URL}/contacts/${contactId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found in local storage.');
+        return;
+      }
+      await axios.delete(`/api/contacts/${contactId}`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setContacts(contacts.filter((contact) => contact._id !== contactId)); // Remove the deleted contact from the list
+      setContacts(contacts.filter(contact => contact._id !== contactId)); // Remove the deleted contact from the list
     } catch (error) {
-      console.error('Error deleting contact', error);
+      console.error('Error deleting contact:', error.response?.data || error.message);
     }
   };
 
@@ -71,5 +81,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-
