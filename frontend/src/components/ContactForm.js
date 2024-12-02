@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 const ContactForm = ({ contact, setEditContact }) => {
   const [name, setName] = useState('');
@@ -16,16 +16,38 @@ const ContactForm = ({ contact, setEditContact }) => {
     }
   }, [contact]);
 
+  const isEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isMobileValid = (mobile) => {
+    const mobileRegex = /^[0-9]{10}$/; // Adjust the regex as needed for your region
+    return mobileRegex.test(mobile);
+  };
+
   const addOrUpdateContactHandler = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
+    if (!isMobileValid(mobile)) {
+      setError('Invalid mobile number. Please enter a valid 10-digit number.');
+      setLoading(false);
+      return;
+    }
+
+    if (!isEmailValid(email)) {
+      setError('Invalid email address. Please enter a valid email.');
+      setLoading(false);
+      return;
+    }
+
     try {
       if (contact) {
         // Update existing contact
         await axios.put(
-          `/api/contacts/${contact._id}`,
+          `https://backend-yiez.onrender.com/api/contacts/${contact._id}`,
           { name, mobile, email },
           { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
         );
@@ -33,7 +55,7 @@ const ContactForm = ({ contact, setEditContact }) => {
       } else {
         // Add new contact
         await axios.post(
-          '/api/contacts',
+          'https://backend-yiez.onrender.com/api/contacts',
           { name, mobile, email },
           { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
         );

@@ -15,7 +15,7 @@ const Dashboard = () => {
           return;
         }
 
-        const { data } = await axios.get('/api/contacts', {
+        const { data } = await axios.get('https://backend-yiez.onrender.com/api/contacts', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setContacts(data);
@@ -35,7 +35,7 @@ const Dashboard = () => {
         console.error('No token found in local storage.');
         return;
       }
-      await axios.delete(`/api/contacts/${contactId}`, {
+      await axios.delete(`https://backend-yiez.onrender.com/api/contacts/${contactId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setContacts(contacts.filter(contact => contact._id !== contactId)); // Remove the deleted contact from the list
@@ -50,6 +50,7 @@ const Dashboard = () => {
   };
 
   return (
+    <>
     <div className="container mt-5">
       <h1>Dashboard</h1>
       <ContactForm contact={editContact} setEditContact={setEditContact} />
@@ -77,6 +78,8 @@ const Dashboard = () => {
         )}
       </ul>
     </div>
+    
+    </>
   );
 };
 

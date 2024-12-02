@@ -10,7 +10,7 @@ const Login = () => {
   const loginHandler = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post('/api/users/login', { username, password });
+      const { data } = await axios.post('https://backend-yiez.onrender.com/api/users/login', { username, password });
       if (data.token) {
         // Save the token to localStorage
         localStorage.setItem('token', data.token);
