@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://anikeshkulalinft:BdGQAApE43xoboyc@contactapp.yhbdp.mongodb.net/?retryWrites=true&w=majority&appName=ContactApp', {
+mongoose.connect('mongodb+srv://vaibhavraut087:xYWAwY3vw04fjoeO@users.xurve.mongodb.net/?retryWrites=true&w=majority&appName=Users', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
